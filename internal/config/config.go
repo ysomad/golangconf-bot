@@ -23,7 +23,7 @@ type Conference struct {
 	URL                string    `env:"CONF_URL" env-required:"true"`
 	DateFrom           time.Time `env:"DATE_FROM" env-required:"true" env-layout:"02.01.2006"`
 	DateUntil          time.Time `env:"DATE_UNTIL" env-required:"true" env-layout:"02.01.2006"`
-	AssessmentDeadline time.Time `env:"ASSESSMENT_DEADLINE" env-required:"true" env-layout:"02.01.2006"`
+	EvaluationDeadline time.Time `env:"EVALUATION_DEADLINE" env-required:"true" env-layout:"02.01.2006"`
 }
 
 func (c Conference) Validate() error {
@@ -31,8 +31,8 @@ func (c Conference) Validate() error {
 		return errors.New("DATE_UNTIL must be greater than DATE_FROM")
 	}
 
-	if c.AssessmentDeadline.Compare(c.DateUntil) != 1 {
-		return errors.New("ASSESSMENT_DEADLINE must be greater than DATE_UNTIL")
+	if c.EvaluationDeadline.Compare(c.DateUntil) != 1 {
+		return errors.New("EVALUATION_DEADLINE must be greater than DATE_UNTIL")
 	}
 
 	return nil

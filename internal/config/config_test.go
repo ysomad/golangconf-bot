@@ -15,7 +15,7 @@ func TestConference_Validate(t *testing.T) {
 	type fields struct {
 		DateFrom           time.Time
 		DateUntil          time.Time
-		AssessmentDeadline time.Time
+		EvaluationDeadline time.Time
 	}
 	tests := map[string]struct {
 		fields  fields
@@ -25,7 +25,7 @@ func TestConference_Validate(t *testing.T) {
 			fields: fields{
 				DateFrom:           date(24, time.June, 2024),
 				DateUntil:          date(25, time.June, 2024),
-				AssessmentDeadline: date(10, time.July, 2024),
+				EvaluationDeadline: date(10, time.July, 2024),
 			},
 			wantErr: false,
 		},
@@ -33,7 +33,7 @@ func TestConference_Validate(t *testing.T) {
 			fields: fields{
 				DateFrom:           date(24, time.June, 2024),
 				DateUntil:          date(17, time.June, 2024),
-				AssessmentDeadline: date(10, time.July, 2024),
+				EvaluationDeadline: date(10, time.July, 2024),
 			},
 			wantErr: true,
 		},
@@ -41,7 +41,7 @@ func TestConference_Validate(t *testing.T) {
 			fields: fields{
 				DateFrom:           date(17, time.June, 2024),
 				DateUntil:          date(17, time.June, 2024),
-				AssessmentDeadline: date(10, time.July, 2024),
+				EvaluationDeadline: date(10, time.July, 2024),
 			},
 			wantErr: true,
 		},
@@ -49,7 +49,7 @@ func TestConference_Validate(t *testing.T) {
 			fields: fields{
 				DateFrom:           date(17, time.June, 2024),
 				DateUntil:          date(17, time.June, 2024),
-				AssessmentDeadline: date(10, time.June, 2024),
+				EvaluationDeadline: date(10, time.June, 2024),
 			},
 			wantErr: true,
 		},
@@ -57,7 +57,7 @@ func TestConference_Validate(t *testing.T) {
 			fields: fields{
 				DateFrom:           date(17, time.June, 2024),
 				DateUntil:          date(10, time.June, 2024),
-				AssessmentDeadline: date(10, time.June, 2024),
+				EvaluationDeadline: date(10, time.June, 2024),
 			},
 			wantErr: true,
 		},
@@ -67,7 +67,7 @@ func TestConference_Validate(t *testing.T) {
 			c := Conference{
 				DateFrom:           tt.fields.DateFrom,
 				DateUntil:          tt.fields.DateUntil,
-				AssessmentDeadline: tt.fields.AssessmentDeadline,
+				EvaluationDeadline: tt.fields.EvaluationDeadline,
 			}
 			err := c.Validate()
 			assert.Equal(t, tt.wantErr, err != nil)

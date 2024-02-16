@@ -25,10 +25,6 @@ test:
 .PHONY: dry-run
 dry-run: goose-reset run-migrate
 
-.PHONY: compose-local
-compose-local:
-	docker-compose up postgres --build -d && docker-compose logs -f
-
 .PHONY: compose-up
 compose-up:
 	docker-compose up --build -d && docker-compose logs -f
