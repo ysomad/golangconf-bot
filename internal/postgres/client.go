@@ -1,4 +1,4 @@
-package pgclient
+package postgres
 
 import (
 	"context"
@@ -26,7 +26,7 @@ type Client struct {
 	Pool    *pgxpool.Pool
 }
 
-func New(connString string, opts ...Option) (*Client, error) {
+func NewClient(connString string, opts ...Option) (*Client, error) {
 	c := &Client{
 		maxConns:     defaultMaxConns,
 		connAttempts: defaultConnAttempts,
@@ -48,13 +48,15 @@ func New(connString string, opts ...Option) (*Client, error) {
 
 	poolConf.MaxConns = c.maxConns
 
-	c.Pool, err = pgxpool.NewWithConfig(context.Background(), poolConf)
+	ctx := context.Background()
+
+	c.Pool, err = pgxpool.NewWithConfig(ctx, poolConf)
 	if err != nil {
 		return nil, err
 	}
 
 	for c.connAttempts > 0 {
-		if err = c.Pool.Ping(context.TODO()); err == nil {
+		if err = c.Pool.Ping(ctx); err == nil {
 			break
 		}
 
@@ -77,5 +79,31 @@ func New(connString string, opts ...Option) (*Client, error) {
 func (p *Client) Close() {
 	if p.Pool != nil {
 		p.Pool.Close()
+	}
+}
+
+type Option func(*Client)
+
+func WithMaxConns(conns int32) Option {
+	return func(c *Client) {
+		c.maxConns = conns
+	}
+}
+
+func WithConnAttempts(attempts uint8) Option {
+	return func(c *Client) {
+		c.connAttempts = attempts
+	}
+}
+
+func WithConnTimeout(timeout time.Duration) Option {
+	return func(c *Client) {
+		c.connTimeout = timeout
+	}
+}
+
+func WithQueryTracer(tracer pgx.QueryTracer) Option {
+	return func(c *Client) {
+		c.tracer = tracer
 	}
 }
