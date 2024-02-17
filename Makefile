@@ -14,7 +14,12 @@ run:
 
 .PHONY: test
 test:
-	go test -v -cover -race -count 1 ./internal/...
+	go test -v -cover -race -count 1 -coverpkg=$(go list ./... | grep -v '/mock$' | tr '\n' ',') ./internal/...
+
+.PHONY: mock
+mock:
+	rm -rf ./internal/bot/mock/ \
+	mockery
 
 .PHONY: compose-up
 compose-up:

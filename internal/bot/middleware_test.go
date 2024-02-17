@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/ysomad/golangconf-bot/internal/bot/mock"
-
 	tele "gopkg.in/telebot.v3"
+
+	mock "github.com/ysomad/golangconf-bot/internal/bot/mock"
 )
 
 func Test_middlewareAdminOnly(t *testing.T) {
