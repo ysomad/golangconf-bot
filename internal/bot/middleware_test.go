@@ -20,7 +20,7 @@ func Test_middlewareAdminOnly(t *testing.T) {
 	}{
 		"multiple_admins_ok": {
 			args:      args{admins: []int64{1337, 35, 7774, 3461, 2}},
-			ctxChatID: 35,
+			ctxChatID: 2,
 			wantErr:   false,
 		},
 		"one_admin_ok": {
