@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS talk_feedbacks (
     telegram_id bigint NOT NULL,
     type feedback_type NOT NULL,
     content_rating smallint,
-    delivery_rating smallint,
+    performance_rating smallint,
     comment text
 );
 -- +goose StatementEnd

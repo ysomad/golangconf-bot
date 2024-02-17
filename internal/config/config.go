@@ -6,11 +6,10 @@ import (
 )
 
 type Config struct {
-	PGURL      string  `env:"PG_URL" env-required:"true"`
-	TGToken    string  `env:"TG_TOKEN" env-required:"true"`
-	TGAdmins   []int64 `env:"TG_ADMINS" env-required:"true"`
-	Conference Conference
 	Log        Log
+	Telegram   Telegram
+	PG         PG
+	Conference Conference
 }
 
 type Log struct {
@@ -18,6 +17,20 @@ type Log struct {
 	AddSource bool   `env:"LOG_ADD_SOURCE"`
 }
 
+type Telegram struct {
+	Token       string        `env:"TG_TOKEN" env-required:"true"`
+	Admins      []int64       `env:"TG_ADMINS" env-required:"true"`
+	HTTPTimeout time.Duration `env:"TG_HTTP_TIMEOUT" env-required:"true"`
+	Verbose     bool          `env:"TG_DEBUG"`
+}
+
+type PG struct {
+	URL      string `env:"PG_URL" env-required:"true"`
+	MaxConns int32  `env:"PG_MAX_CONNS" env-required:"true"`
+}
+
+// Conference represents conferences that is taking place at the current moment in time.
+// Move to MODELS ???
 type Conference struct {
 	Name               string    `env:"CONF_NAME" env-required:"true"`
 	URL                string    `env:"CONF_URL" env-required:"true"`

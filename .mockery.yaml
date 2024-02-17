@@ -1,0 +1,11 @@
+with-expecter: true
+packages:
+  gopkg.in/telebot.v3:
+    config:
+      dir: internal/bot/mock
+      outpkg: mock
+    interfaces:
+      Context:
+        config:
+          mockname: TelebotContext
+          filename: telebot_context.go

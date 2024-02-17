@@ -10,20 +10,11 @@ lint:
 
 .PHONY:
 run:
-	go mod tidy && go mod download && \
-	go run . \
-
-.PHONY: run-migrate
-run-migrate:
-	go mod tidy && go mod download && \
-	go run . -migrate
+	go mod tidy && go mod download && go run .
 
 .PHONY: test
 test:
 	go test -v -cover -race -count 1 ./internal/...
-
-.PHONY: dry-run
-dry-run: goose-reset run-migrate
 
 .PHONY: compose-up
 compose-up:
