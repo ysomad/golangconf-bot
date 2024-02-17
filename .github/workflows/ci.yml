@@ -37,7 +37,6 @@ jobs:
           -race \
           -covermode=atomic \
           -coverprofile=coverage.out \
-          -coverpkg=$(go list ./... | grep -v '/mock$' | tr '\n' ',') \
           ./internal/...
 
     - name: Upload coverage to Codecov
