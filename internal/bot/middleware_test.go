@@ -4,8 +4,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/ysomad/golangconf-bot/internal/bot/mock"
-
 	tele "gopkg.in/telebot.v3"
 )
 
@@ -46,7 +44,7 @@ func Test_middlewareAdminOnly(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			c := mock.NewTelebotContext(t)
+			c := newMockContext(t)
 			c.EXPECT().Chat().Return(&tele.Chat{ID: tt.ctxChatID})
 
 			mw := middlewareAdminOnly(tt.args.admins)

@@ -16,6 +16,10 @@ run:
 test:
 	go test -v -cover -race -count 1 ./internal/...
 
+.PHONY: mock
+mock:
+	mockery
+
 .PHONY: compose-up
 compose-up:
 	docker-compose up --build -d && docker-compose logs -f
