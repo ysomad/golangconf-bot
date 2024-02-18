@@ -10,6 +10,7 @@ type Config struct {
 	Telegram   Telegram
 	PG         PG
 	Conference Conference
+	StateLRU   StateLRU
 }
 
 type Log struct {
@@ -27,6 +28,11 @@ type Telegram struct {
 type PG struct {
 	URL      string `env:"PG_URL" env-required:"true"`
 	MaxConns int32  `env:"PG_MAX_CONNS" env-required:"true"`
+}
+
+type StateLRU struct {
+	Size int           `env:"STATE_LRU_SIZE" env-required:"true"`
+	TTL  time.Duration `env:"STATE_LRU_TTL" env-required:"true"`
 }
 
 // Conference represents conferences that is taking place at the current moment in time.

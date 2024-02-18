@@ -2,47 +2,44 @@ package bot
 
 import (
 	"log/slog"
-	"net/http"
-	"time"
 
+	"github.com/ysomad/golangconf-bot/internal/state"
 	tele "gopkg.in/telebot.v3"
 	telemiddleware "gopkg.in/telebot.v3/middleware"
-
-	"github.com/ysomad/golangconf-bot/internal/config"
 )
 
 type Bot struct {
 	*tele.Bot
+	state stateStorage
 }
 
-func New(conf config.Telegram) (Bot, error) {
-	telebot, err := tele.NewBot(tele.Settings{
-		Token:   conf.Token,
-		Verbose: conf.Verbose,
-		OnError: handleError,
-		Client:  &http.Client{Timeout: conf.HTTPTimeout},
+type stateStorage interface {
+	Save(int64, state.State)
+	Get(int64) state.State
+	Del(int64)
+}
 
-		// TODO: CHANGE TO WEBHOOK
-		Poller: &tele.LongPoller{Timeout: time.Second},
-	})
-	if err != nil {
-		return Bot{}, err
+func New(telebot *tele.Bot, admins []int64, state stateStorage) (Bot, error) {
+	b := Bot{
+		Bot:   telebot,
+		state: state,
 	}
-
-	b := Bot{telebot}
 
 	b.Use(telemiddleware.Recover())
 
-	b.Handle(tele.OnText, b.HandleText)
-	b.Handle(tele.OnCallback, b.HandleCallback)
+	b.Handle(tele.OnText, b.handleText)
+	b.Handle(tele.OnCallback, b.handleCallback)
 
 	adminOnly := b.Group()
-	adminOnly.Use(middlewareAdminOnly(conf.Admins))
+	adminOnly.Use(middlewareAdminOnly(admins))
+
+	adminOnly.Handle("/upload_schedule", b.uploadSchedule)
+	adminOnly.Handle(tele.OnDocument, b.handleDocumentUpload)
 
 	return b, nil
 }
 
-func handleError(err error, c tele.Context) {
+func HandleError(err error, c tele.Context) {
 	if err == nil || c == nil {
 		return
 	}

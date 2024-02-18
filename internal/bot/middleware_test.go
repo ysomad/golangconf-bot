@@ -49,7 +49,10 @@ func Test_middlewareAdminOnly(t *testing.T) {
 
 			mw := middlewareAdminOnly(tt.args.admins)
 
-			err := mw(func(tele.Context) error { return nil })(c)
+			err := mw(func(tele.Context) error {
+				// next handler in chain (tele.HandlerFunc)
+				return nil
+			})(c)
 			assert.Equal(t, tt.wantErr, err != nil)
 		})
 	}
