@@ -45,13 +45,18 @@ type Conference struct {
 	EvaluationDeadline time.Time `env:"EVALUATION_DEADLINE" env-required:"true" env-layout:"02.01.2006"`
 }
 
+var (
+	errInvalidDateUntil          = errors.New("DATE_UNTIL must be greater than DATE_FROM")
+	errInvalidEvaluationDeadline = errors.New("EVALUATION_DEADLINE must be greater than DATE_UNTIL")
+)
+
 func (c Conference) Validate() error {
 	if c.DateUntil.Compare(c.DateFrom) != 1 {
-		return errors.New("DATE_UNTIL must be greater than DATE_FROM")
+		return errInvalidDateUntil
 	}
 
 	if c.EvaluationDeadline.Compare(c.DateUntil) != 1 {
-		return errors.New("EVALUATION_DEADLINE must be greater than DATE_UNTIL")
+		return errInvalidEvaluationDeadline
 	}
 
 	return nil

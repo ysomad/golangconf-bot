@@ -19,7 +19,7 @@ func TestConference_Validate(t *testing.T) {
 	}
 	tests := map[string]struct {
 		fields  fields
-		wantErr bool
+		wantErr error
 	}{
 		"valid": {
 			fields: fields{
@@ -27,7 +27,7 @@ func TestConference_Validate(t *testing.T) {
 				DateUntil:          date(25, time.June, 2024),
 				EvaluationDeadline: date(10, time.July, 2024),
 			},
-			wantErr: false,
+			wantErr: nil,
 		},
 		"date_until_before_date_from": {
 			fields: fields{
@@ -35,7 +35,7 @@ func TestConference_Validate(t *testing.T) {
 				DateUntil:          date(17, time.June, 2024),
 				EvaluationDeadline: date(10, time.July, 2024),
 			},
-			wantErr: true,
+			wantErr: errInvalidDateUntil,
 		},
 		"date_until_equal_date_from": {
 			fields: fields{
@@ -43,23 +43,23 @@ func TestConference_Validate(t *testing.T) {
 				DateUntil:          date(17, time.June, 2024),
 				EvaluationDeadline: date(10, time.July, 2024),
 			},
-			wantErr: true,
+			wantErr: errInvalidDateUntil,
 		},
 		"evaluation_deadline_before_date_until": {
 			fields: fields{
 				DateFrom:           date(17, time.June, 2024),
-				DateUntil:          date(17, time.June, 2024),
+				DateUntil:          date(20, time.June, 2024),
 				EvaluationDeadline: date(10, time.June, 2024),
 			},
-			wantErr: true,
+			wantErr: errInvalidEvaluationDeadline,
 		},
 		"evaluation_deadline_equal_date_until": {
 			fields: fields{
 				DateFrom:           date(17, time.June, 2024),
-				DateUntil:          date(10, time.June, 2024),
+				DateUntil:          date(20, time.June, 2024),
 				EvaluationDeadline: date(10, time.June, 2024),
 			},
-			wantErr: true,
+			wantErr: errInvalidEvaluationDeadline,
 		},
 	}
 	for name, tt := range tests {
@@ -70,7 +70,7 @@ func TestConference_Validate(t *testing.T) {
 				EvaluationDeadline: tt.fields.EvaluationDeadline,
 			}
 			err := c.Validate()
-			assert.Equal(t, tt.wantErr, err != nil)
+			assert.ErrorIs(t, err, tt.wantErr)
 		})
 	}
 }
