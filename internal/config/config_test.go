@@ -45,7 +45,7 @@ func TestConference_Validate(t *testing.T) {
 			},
 			wantErr: true,
 		},
-		"assessment_deadline_before_date_until": {
+		"evaluation_deadline_before_date_until": {
 			fields: fields{
 				DateFrom:           date(17, time.June, 2024),
 				DateUntil:          date(17, time.June, 2024),
@@ -53,7 +53,7 @@ func TestConference_Validate(t *testing.T) {
 			},
 			wantErr: true,
 		},
-		"assessment_deadline_equal_date_until": {
+		"evaluation_deadline_equal_date_until": {
 			fields: fields{
 				DateFrom:           date(17, time.June, 2024),
 				DateUntil:          date(10, time.June, 2024),
