@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -50,15 +51,23 @@ func (b Bot) handleDocumentUpload(c telebot.Context) error {
 		}
 		defer file.Close()
 
-		_, errs := schedule.ParseCSV(file)
+		schedule, errs := schedule.NewFromCSV(file)
 		if len(errs) != 0 {
 			for _, err := range errs {
 				c.Send(err.Error())
 			}
+
+			return nil
 		}
+
+		bb, err := json.Marshal(schedule)
+		if err != nil {
+			c.Send(err.Error())
+		}
+
+		return c.Send(string(bb))
+
 	default:
 		return fmt.Errorf("unsupported document upload state step: %d", st.Step)
 	}
-
-	return nil
 }
