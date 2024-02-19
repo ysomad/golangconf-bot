@@ -34,27 +34,18 @@ var (
 	errTimezoneNotLoaded = errors.New("ошибка загрузки часового пояса")
 )
 
-func readCSV(f io.Reader) ([][]string, error) {
-	if f == nil {
-		return nil, errNilReader
-	}
-
-	reader := csv.NewReader(f)
-
-	records, err := reader.ReadAll()
-	if err != nil {
-		return nil, fmt.Errorf("%w: %w", errInvalidCSV, err)
-	}
-
-	return records, err
-}
-
 // NewFromCSV reads csv file and parses it into schedule of talks,
 // returns list of CSVError.
 func NewFromCSV(file io.Reader) ([]Talk, []error) {
-	records, err := readCSV(file)
+	if file == nil {
+		return nil, []error{errNilReader}
+	}
+
+	reader := csv.NewReader(file)
+
+	records, err := reader.ReadAll()
 	if err != nil {
-		return nil, []error{err}
+		return nil, []error{fmt.Errorf("%w: %w", errInvalidCSV, err)}
 	}
 
 	var (

@@ -8,45 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_readCSV(t *testing.T) {
-	type args struct {
-		f io.Reader
-	}
-	tests := map[string]struct {
-		args    args
-		want    [][]string
-		wantErr bool
-	}{
-		"nil_reader": {
-			args:    args{f: nil},
-			want:    nil,
-			wantErr: true,
-		},
-		"invalid_csv_extra_col": {
-			args: args{f: strings.NewReader(`Start (MSK Time Zone),Duration (min),Title,Speakers,URL
-2024-02-19 10:00,60,Introduction to Go,Gopher,"https://example.com/intro-to-go",Extra Field`)},
-			want:    nil,
-			wantErr: true,
-		},
-		"ok": {
-			args: args{f: strings.NewReader(`Start (MSK Time Zone),Duration (min),Title,Speakers,URL
-2024-02-19 10:00,60,Introduction to Go,Gopher,"https://example.com/intro-to-go"`)},
-			want: [][]string{
-				{"Start (MSK Time Zone)", "Duration (min)", "Title", "Speakers", "URL"},
-				{"2024-02-19 10:00", "60", "Introduction to Go", "Gopher", "https://example.com/intro-to-go"},
-			},
-			wantErr: false,
-		},
-	}
-	for name, tt := range tests {
-		t.Run(name, func(t *testing.T) {
-			got, err := readCSV(tt.args.f)
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.wantErr, err != nil)
-		})
-	}
-}
-
 func TestNewFromCSV(t *testing.T) {
 	type args struct {
 		file io.Reader
