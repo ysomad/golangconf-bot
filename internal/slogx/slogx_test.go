@@ -65,6 +65,14 @@ func Test_parseLevel(t *testing.T) {
 			args: args{level: "ERr"},
 			want: slog.LevelError,
 		},
+		"debug1": {
+			args: args{level: "debug"},
+			want: slog.LevelDebug,
+		},
+		"debug2": {
+			args: args{level: "DebUG"},
+			want: slog.LevelDebug,
+		},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
